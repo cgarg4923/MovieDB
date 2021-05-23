@@ -16,8 +16,8 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 ### HOME PAGE
 
-![image](MovieDB/lib/screenshot of app/1.jpeg)
+![](lib/ss/1.jpeg)
 
 ### DISPLAYING MOVIE DETAILS
 
-![image](MovieDB/lib/screenshot of app/2.jpeg)
+![](lib/ss/2.jpeg)
