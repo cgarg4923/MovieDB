@@ -16,8 +16,15 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 ### HOME PAGE
 
+![](lib/ss/4.jpeg)
+
+### Login/Signup
+
 ![](lib/ss/1.jpeg)
 
-### DISPLAYING MOVIE DETAILS
-
+### Other ss
 ![](lib/ss/2.jpeg)
+![](lib/ss/3.jpeg)
+![](lib/ss/5.jpeg)
+![](lib/ss/6.jpeg)
+![](lib/ss/7.jpeg)
