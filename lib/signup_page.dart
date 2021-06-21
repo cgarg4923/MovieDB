@@ -2,8 +2,8 @@ import 'package:MovieApp/main.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:MovieApp/verify.dart';
 
 class SignUp extends StatelessWidget {
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -14,6 +14,29 @@ class SignUp extends StatelessWidget {
   TextEditingController t3 = TextEditingController();
   TextEditingController t4 = TextEditingController();
   TextEditingController t5 = TextEditingController();
+  InputDecor(String txt) {
+    return InputDecoration(
+      prefixIcon: Icon(
+        Icons.lock,
+        color: Colors.white.withOpacity(0.5),
+      ),
+      hintText: txt,
+      hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+      labelText: txt,
+      labelStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.white.withOpacity(0.5)),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.white.withOpacity(0.5)),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.5)),
+          borderRadius: BorderRadius.circular(5)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,32 +73,7 @@ class SignUp extends StatelessWidget {
                               controller: t1,
                               keyboardType: TextInputType.name,
                               style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                prefixIcon: Icon(
-                                  Icons.person,
-                                  color: Colors.white.withOpacity(0.5),
-                                ),
-                                hintText: 'First Name',
-                                labelText: 'First Name',
-                                hintStyle: TextStyle(
-                                    color: Colors.white.withOpacity(0.5)),
-                                labelStyle: TextStyle(
-                                    color: Colors.white.withOpacity(0.5)),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.white.withOpacity(0.5)),
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                disabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.white.withOpacity(0.5)),
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.white.withOpacity(0.5)),
-                                    borderRadius: BorderRadius.circular(5)),
-                              ),
+                              decoration: InputDecor('First Name'),
                               onChanged: (value) {
                                 fname = value;
                               },
@@ -89,32 +87,7 @@ class SignUp extends StatelessWidget {
                               controller: t2,
                               keyboardType: TextInputType.name,
                               style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                prefixIcon: Icon(
-                                  Icons.person,
-                                  color: Colors.white.withOpacity(0.5),
-                                ),
-                                hintText: 'Last Name',
-                                labelText: 'Last Name',
-                                hintStyle: TextStyle(
-                                    color: Colors.white.withOpacity(0.5)),
-                                labelStyle: TextStyle(
-                                    color: Colors.white.withOpacity(0.5)),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.white.withOpacity(0.5)),
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                disabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.white.withOpacity(0.5)),
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.white.withOpacity(0.5)),
-                                    borderRadius: BorderRadius.circular(5)),
-                              ),
+                              decoration: InputDecor('Last Name'),
                               onChanged: (value) {
                                 lname = value;
                               },
@@ -129,32 +102,7 @@ class SignUp extends StatelessWidget {
                         controller: t3,
                         keyboardType: TextInputType.emailAddress,
                         style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.person,
-                            color: Colors.white.withOpacity(0.5),
-                          ),
-                          hintText: 'Email',
-                          labelText: 'Email',
-                          hintStyle:
-                              TextStyle(color: Colors.white.withOpacity(0.5)),
-                          labelStyle:
-                              TextStyle(color: Colors.white.withOpacity(0.5)),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.white.withOpacity(0.5)),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.white.withOpacity(0.5)),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.white.withOpacity(0.5)),
-                              borderRadius: BorderRadius.circular(5)),
-                        ),
+                        decoration: InputDecor('Email'),
                         onChanged: (value) {
                           email = value;
                         },
@@ -167,32 +115,7 @@ class SignUp extends StatelessWidget {
                         style: TextStyle(color: Colors.white),
                         obscureText: true,
                         keyboardType: TextInputType.visiblePassword,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.lock,
-                            color: Colors.white.withOpacity(0.5),
-                          ),
-                          hintText: 'Password',
-                          hintStyle:
-                              TextStyle(color: Colors.white.withOpacity(0.5)),
-                          labelText: 'Password',
-                          labelStyle:
-                              TextStyle(color: Colors.white.withOpacity(0.5)),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.white.withOpacity(0.5)),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.white.withOpacity(0.5)),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.white.withOpacity(0.5)),
-                              borderRadius: BorderRadius.circular(5)),
-                        ),
+                        decoration: InputDecor('Password'),
                         onChanged: (value) {
                           password = value;
                         },
@@ -205,32 +128,7 @@ class SignUp extends StatelessWidget {
                         style: TextStyle(color: Colors.white),
                         obscureText: true,
                         keyboardType: TextInputType.visiblePassword,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.lock,
-                            color: Colors.white.withOpacity(0.5),
-                          ),
-                          hintText: 'Confirm Password',
-                          hintStyle:
-                              TextStyle(color: Colors.white.withOpacity(0.5)),
-                          labelText: 'Confirm Password',
-                          labelStyle:
-                              TextStyle(color: Colors.white.withOpacity(0.5)),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.white.withOpacity(0.5)),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.white.withOpacity(0.5)),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.white.withOpacity(0.5)),
-                              borderRadius: BorderRadius.circular(5)),
-                        ),
+                        decoration: InputDecor('Confirm Password'),
                         onChanged: (value) {
                           repassword = value;
                         },
@@ -267,45 +165,46 @@ class SignUp extends StatelessWidget {
                               var uid;
                               if (password == repassword) {
                                 try {
-                                  final newUser =
-                                      await auth.createUserWithEmailAndPassword(
-                                          email: email, password: password);
-                                  if (newUser != null) {
-                                    uid = await newUser.user.uid;
-                                    await firestore
-                                        .collection('Users')
-                                        .doc(uid.toString())
-                                        .set({
-                                      'fname': fname,
-                                      'lname': lname,
-                                      'password': password.hashCode,
-                                      'favourites': [],
-                                      'watch_later': [],
-                                      'email': email
-                                    }).then((value) async {
-                                      SharedPreferences prefs =
-                                          await SharedPreferences.getInstance();
-                                      prefs.setString(
-                                          'email', email.toString());
-                                    });
+                                  UserCredential newUser = await FirebaseAuth
+                                      .instance
+                                      .createUserWithEmailAndPassword(
+                                    email: email,
+                                    password: password,
+                                  );
 
+                                  if (newUser != null) {
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            MyHomePage(uid: uid.toString()),
+                                        builder: (context) => VerifyScreen(
+                                          uid: uid.toString(),
+                                          fname: fname,
+                                          lname: lname,
+                                          password: password.hashCode,
+                                          favourites: [],
+                                          watch_later: [],
+                                          email: email,
+                                        ),
                                       ),
                                     );
                                   }
-                                } catch (e) {
+                                } on FirebaseAuthException catch (e) {
+                                  String msg;
+                                  if (e.code == 'weak-password') {
+                                    msg = 'The password provided is too weak.';
+                                  } else if (e.code == 'email-already-in-use') {
+                                    msg =
+                                        'The account already exists for that email.';
+                                  }
                                   Fluttertoast.showToast(
-                                      msg: e.toString(),
+                                      msg: msg,
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.CENTER,
                                       timeInSecForIosWeb: 1,
                                       backgroundColor: Colors.black38,
                                       textColor: Colors.white,
                                       fontSize: 16.0);
+                                } catch (e) {
                                   print(e);
                                 }
                               } else {

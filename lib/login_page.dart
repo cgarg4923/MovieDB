@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:MovieApp/main.dart';
 import 'package:MovieApp/signup_page.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,29 @@ class LoginPage extends StatelessWidget {
   TextEditingController t2 = new TextEditingController();
   TextEditingController t1 = new TextEditingController();
   final FirebaseAuth auth = FirebaseAuth.instance;
+  InputDecor(String txt) {
+    return InputDecoration(
+      prefixIcon: Icon(
+        Icons.lock,
+        color: Colors.white.withOpacity(0.5),
+      ),
+      hintText: txt,
+      hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+      labelText: txt,
+      labelStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.white.withOpacity(0.5)),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.white.withOpacity(0.5)),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.5)),
+          borderRadius: BorderRadius.circular(5)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,32 +67,7 @@ class LoginPage extends StatelessWidget {
                         controller: t1,
                         keyboardType: TextInputType.emailAddress,
                         style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.person,
-                            color: Colors.white.withOpacity(0.5),
-                          ),
-                          hintText: 'Email',
-                          labelText: 'Email',
-                          hintStyle:
-                              TextStyle(color: Colors.white.withOpacity(0.5)),
-                          labelStyle:
-                              TextStyle(color: Colors.white.withOpacity(0.5)),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.white.withOpacity(0.5)),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.white.withOpacity(0.5)),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.white.withOpacity(0.5)),
-                              borderRadius: BorderRadius.circular(5)),
-                        ),
+                        decoration: InputDecor('Email'),
                         onChanged: (value) {
                           email = value;
                         },
@@ -80,32 +80,7 @@ class LoginPage extends StatelessWidget {
                         style: TextStyle(color: Colors.white),
                         obscureText: true,
                         keyboardType: TextInputType.visiblePassword,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.lock,
-                            color: Colors.white.withOpacity(0.5),
-                          ),
-                          hintText: 'Password',
-                          hintStyle:
-                              TextStyle(color: Colors.white.withOpacity(0.5)),
-                          labelText: 'Password',
-                          labelStyle:
-                              TextStyle(color: Colors.white.withOpacity(0.5)),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.white.withOpacity(0.5)),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.white.withOpacity(0.5)),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.white.withOpacity(0.5)),
-                              borderRadius: BorderRadius.circular(5)),
-                        ),
+                        decoration: InputDecor('Password'),
                         onChanged: (value) {
                           password = value;
                         },
@@ -124,12 +99,14 @@ class LoginPage extends StatelessWidget {
                             onPressed: () async {
                               var uid;
                               try {
-                                final user =
-                                    await auth.signInWithEmailAndPassword(
-                                        email: email, password: password);
-
-                                if (user != null) {
-                                  uid = await user.user.uid;
+                                UserCredential userCredential =
+                                    await FirebaseAuth.instance
+                                        .signInWithEmailAndPassword(
+                                  email: email,
+                                  password: password,
+                                );
+                                if (userCredential != null) {
+                                  uid = await userCredential.user.uid;
                                   print(uid);
                                   Navigator.pushReplacement(
                                     context,
@@ -139,10 +116,16 @@ class LoginPage extends StatelessWidget {
                                     ),
                                   );
                                 }
-                              } catch (e) {
+                              } on FirebaseAuthException catch (e) {
+                                String msg;
+                                if (e.code == 'user-not-found') {
+                                  msg = 'No user found for that email.';
+                                } else if (e.code == 'wrong-password') {
+                                  msg =
+                                      'Wrong password provided for that user.';
+                                }
                                 Fluttertoast.showToast(
-                                    msg:
-                                        'Unable to Create User', //e.toString(),
+                                    msg: msg, //e.toString(),
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.BOTTOM,
                                     timeInSecForIosWeb: 1,
@@ -152,6 +135,7 @@ class LoginPage extends StatelessWidget {
                                 print('hello');
                                 print(e);
                               }
+
                               t1.clear();
                               t2.clear();
                             },

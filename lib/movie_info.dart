@@ -178,6 +178,7 @@ class _MovieInfoState extends State<MovieInfo> {
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.baseline,
+                              textBaseline: TextBaseline.alphabetic,
                               children: [
                                 Text(
                                   result['vote_average'].toString(),
