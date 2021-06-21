@@ -6,6 +6,7 @@ import 'package:MovieApp/signup_page.dart';
 import 'package:MovieApp/watchlater.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'signup_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -212,7 +213,14 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         ),
         centerTitle: true,
-        title: Text(appBartitle[selectedIndex]),
+        title: Text(
+          appBartitle[selectedIndex],
+          style: TextStyle(
+            fontFamily: 'Dancing Script',
+            fontSize: 23,
+            letterSpacing: 1.1,
+          ),
+        ),
         elevation: 8,
         shadowColor: Colors.white30,
         actions: [
@@ -297,8 +305,22 @@ class _MyHomePageState extends State<MyHomePage> {
                   height: 350,
                   child: ContainedTabBarView(
                     tabs: [
-                      Text('Comedy'),
-                      Text('Horror'),
+                      Text(
+                        'Comedy',
+                        style: TextStyle(
+                          fontFamily: 'Lobster Two',
+                          fontSize: 18,
+                          letterSpacing: 1.1,
+                        ),
+                      ),
+                      Text(
+                        'Horror',
+                        style: TextStyle(
+                          fontFamily: 'Lobster Two',
+                          fontSize: 18,
+                          letterSpacing: 1.1,
+                        ),
+                      ),
                     ],
                     views: [
                       Container(
@@ -325,8 +347,22 @@ class _MyHomePageState extends State<MyHomePage> {
                   height: 350,
                   child: ContainedTabBarView(
                     tabs: [
-                      Text('Action'),
-                      Text('Drama'),
+                      Text(
+                        'Action',
+                        style: TextStyle(
+                          fontFamily: 'Lobster Two',
+                          fontSize: 18,
+                          letterSpacing: 1.1,
+                        ),
+                      ),
+                      Text(
+                        'Drama',
+                        style: TextStyle(
+                          fontFamily: 'Lobster Two',
+                          fontSize: 18,
+                          letterSpacing: 1.1,
+                        ),
+                      ),
                     ],
                     views: [
                       Container(
@@ -367,7 +403,11 @@ class MovieMap extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 heading,
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(
+                  fontSize: 23,
+                  fontFamily: 'Lobster Two',
+                  letterSpacing: 1.2,
+                ),
               ),
             ),
           ],

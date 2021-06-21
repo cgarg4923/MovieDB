@@ -157,14 +157,16 @@ class _MovieInfoState extends State<MovieInfo> {
                           ),
                           Text(
                             ' Summary',
-                            style: TextStyle(fontSize: 20),
+                            style: TextStyle(
+                                fontSize: 20, fontFamily: 'Lobster Two'),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 8, horizontal: 6),
                             child: Text(
                               result['overview'],
-                              style: TextStyle(letterSpacing: 1.1),
+                              style: TextStyle(
+                                  letterSpacing: 1.1, fontFamily: 'Quicksand'),
                             ),
                           ),
                           SizedBox(
@@ -306,9 +308,15 @@ class _MovieInfoState extends State<MovieInfo> {
                           SizedBox(
                             height: 20,
                           ),
-                          Text(
-                            ' Watch Trailer..',
-                            style: TextStyle(fontSize: 20),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Text(
+                              ' Watch Trailer....',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontFamily: 'Quicksand',
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
                           Container(
                             child: vid == null
@@ -371,9 +379,16 @@ class CastInfo1 extends StatelessWidget {
                                       ),
                               ),
                             ),
+                            SizedBox(
+                              height: 5,
+                            ),
                             val == 'cast'
-                                ? Text(type[val][index]['character'])
-                                : Text(type[val][index]['job']),
+                                ? Text(
+                                    type[val][index]['character'],
+                                    textAlign: TextAlign.center,
+                                  )
+                                : Text(type[val][index]['job'],
+                                    textAlign: TextAlign.center),
                           ],
                         ),
                       ),

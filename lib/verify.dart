@@ -25,7 +25,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
   String msg = "";
   User user;
   Timer timer;
-
+  bool flag = false;
   @override
   void initState() {
     user = auth.currentUser;
@@ -48,15 +48,22 @@ class _VerifyScreenState extends State<VerifyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text(
-          msg,
-          softWrap: true,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 15,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            flag ? Icons.verified : Icons.wifi_protected_setup_sharp,
+            size: 30,
           ),
-        ),
+          Text(
+            msg,
+            softWrap: true,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 15,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -68,6 +75,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
       timer.cancel();
       setState(() {
         msg = '${user.email} email verified';
+        flag = true;
       });
       var uid = user.uid;
       await FirebaseFirestore.instance
