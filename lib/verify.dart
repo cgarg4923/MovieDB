@@ -28,11 +28,11 @@ class _VerifyScreenState extends State<VerifyScreen> {
   bool flag = false;
   @override
   void initState() {
-    user = auth.currentUser;
-    user.sendEmailVerification();
     setState(() {
+      user = auth.currentUser;
       msg = 'An email has been sent to ${user.email} please verify';
     });
+    user.sendEmailVerification();
     timer = Timer.periodic(Duration(seconds: 5), (timer) {
       checkEmailVerified();
     });
@@ -51,9 +51,12 @@ class _VerifyScreenState extends State<VerifyScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            flag ? Icons.verified : Icons.wifi_protected_setup_sharp,
-            size: 30,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(
+              flag ? Icons.verified : Icons.wifi_protected_setup_sharp,
+              size: 50,
+            ),
           ),
           Text(
             msg,
