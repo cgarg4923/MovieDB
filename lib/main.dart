@@ -61,6 +61,8 @@ var searchResult;
 var comedy;
 var horror;
 var toprated;
+var drama;
+var action;
 List<String> appBartitle = ['MovieDB', 'Favourites', 'Watch Later'];
 // const endPoints = {
 //   trendingMovies: /trending/movie/week?api_key=${APIKey},
@@ -148,6 +150,22 @@ class _MyHomePageState extends State<MyHomePage> {
         horror = result['results'];
       });
     }
+    response = await http.get(baseURL +
+        '/discover/movie?api_key=${APIKey}&language=en-US&sort_by=popularity.desc&with_genres=18');
+    if (response.statusCode == 200) {
+      var result = jsonDecode(response.body);
+      setState(() {
+        drama = result['results'];
+      });
+    }
+    response = await http.get(baseURL +
+        '/discover/movie?api_key=${APIKey}&language=en-US&sort_by=popularity.desc&with_genres=28');
+    if (response.statusCode == 200) {
+      var result = jsonDecode(response.body);
+      setState(() {
+        action = result['results'];
+      });
+    }
   }
 
   @override
@@ -172,7 +190,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _signOut(BuildContext context) async {
     await _firebaseAuth.signOut().then((_) {
-      Navigator.pushReplacementNamed(context, '/login');
+      print("called");
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
     });
   }
 
@@ -204,25 +224,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   context: context,
                   delegate: DataSearch(
                     fuid: widget.uid,
-                    callBack: (String query) async {
-                      print('called');
-                      http.Response response = await http.get(baseURL +
-                          '/search/movie?api_key=${APIKey}&language=en-US&page=1&include_adult=false&query=${query}');
-                      if (response.statusCode == 200) {
-                        var result = jsonDecode(response.body);
-                        setState(() {
-                          searchResult = result;
-                        });
-                      }
-                    },
+                    context: context,
                   ),
                 );
               }),
           IconButton(
               icon: Icon(Icons.logout),
-              onPressed: () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                prefs.remove('email');
+              onPressed: () {
                 _signOut(context);
               }),
         ],
@@ -291,9 +299,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     tabs: [
                       Text('Comedy'),
                       Text('Horror'),
-                      // Text('Action'),
-                      // Text('Drama'),
-                      // Text('Romance')
                     ],
                     views: [
                       Container(
@@ -307,6 +312,34 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: MovieMap(
                           heading: '',
                           type: horror,
+                          uid: widget.uid,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  color: Colors.transparent,
+                  width: 200,
+                  height: 350,
+                  child: ContainedTabBarView(
+                    tabs: [
+                      Text('Action'),
+                      Text('Drama'),
+                    ],
+                    views: [
+                      Container(
+                        child: MovieMap(
+                          heading: '',
+                          type: action,
+                          uid: widget.uid,
+                        ),
+                      ),
+                      Container(
+                        child: MovieMap(
+                          heading: '',
+                          type: drama,
                           uid: widget.uid,
                         ),
                       ),
@@ -377,14 +410,23 @@ class MovieMap extends StatelessWidget {
 }
 
 class DataSearch extends SearchDelegate<String> {
-  List<String> recents = ['hello', 'chirag'];
-  Function callBack;
+  List recents = [];
   var result;
+  BuildContext context;
   final String fuid;
-  DataSearch({@required this.fuid, this.callBack});
+  DataSearch({@required this.fuid, this.context});
   @override
   ThemeData appBarTheme(BuildContext context) {
     return Theme.of(context);
+  }
+
+  Future search(BuildContext context, String query) async {
+    http.Response response = await http.get(baseURL +
+        '/search/movie?api_key=${APIKey}&language=en-US&page=1&include_adult=false&query=${query}');
+    if (response.statusCode == 200) {
+      result = jsonDecode(response.body);
+    }
+    return result['results'];
   }
 
   @override
@@ -395,7 +437,6 @@ class DataSearch extends SearchDelegate<String> {
           icon: Icon(Icons.clear),
           onPressed: () {
             query = '';
-            searchResult['results'] = [];
           })
     ];
     throw UnimplementedError();
@@ -419,38 +460,43 @@ class DataSearch extends SearchDelegate<String> {
   @override
   Widget buildResults(BuildContext context) {
     // TODO: implement buildResults
-    callBack(query);
-    Timer(Duration(seconds: 1), () {
-      print("Yeah, this line is printed after 3 seconds");
-    });
-    return searchResult == null
-        ? Center(child: CircularProgressIndicator())
-        : ListView.builder(
-            itemCount: searchResult['results'].length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  print('hhh');
-                  print(searchResult['results'][index]['id']);
-                  print(fuid);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => MovieInfo(
-                        movieId: searchResult['results'][index]['id'],
-                        uid: fuid,
-                      ),
-                    ),
-                  );
-                },
-                child: ListTile(
-                  leading: Icon(Icons.movie_filter_outlined),
-                  title: Text(searchResult['results'][index]['original_title']),
-                ),
-              );
-            },
-          );
+    return FutureBuilder(
+      future: search(context, query),
+      builder: (context, AsyncSnapshot projectSnap) {
+        if (!projectSnap.hasData) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          return Container(
+            child: ListView.builder(
+              itemCount: projectSnap.data.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    if (!recents.contains(projectSnap.data[index])) {
+                      recents.add(projectSnap.data[index]);
+                    }
 
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => MovieInfo(
+                          movieId: projectSnap.data[index]['id'],
+                          uid: fuid,
+                        ),
+                      ),
+                    );
+                  },
+                  child: ListTile(
+                    leading: Icon(Icons.movie_filter_outlined),
+                    title: Text(projectSnap.data[index]['title']),
+                  ),
+                );
+              },
+            ),
+          );
+        }
+      },
+    );
     throw UnimplementedError();
   }
 
@@ -459,13 +505,25 @@ class DataSearch extends SearchDelegate<String> {
     // TODO: implement buildSuggestions
     //var ans;
     List suggestions = query.length == 0 ? recents : [];
-
     return ListView.builder(
       itemCount: suggestions.length,
       itemBuilder: (context, index) {
-        return ListTile(
-          leading: Icon(Icons.movie_filter_outlined),
-          title: Text(suggestions[index]),
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => MovieInfo(
+                  movieId: suggestions[index]['id'],
+                  uid: fuid,
+                ),
+              ),
+            );
+          },
+          child: ListTile(
+            leading: Icon(Icons.history),
+            title: Text(suggestions[index]['title']),
+          ),
         );
       },
     );
