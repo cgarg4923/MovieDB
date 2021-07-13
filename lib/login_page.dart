@@ -59,10 +59,17 @@ class LoginPage extends StatelessWidget {
                 width: 300,
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 25),
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 25),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Icon(
+                        Icons.person,
+                        size: 40,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
                       TextField(
                         controller: t1,
                         keyboardType: TextInputType.emailAddress,
