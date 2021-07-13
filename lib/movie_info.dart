@@ -372,7 +372,9 @@ class CastInfo1 extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(10),
                                 child: type[val][index]['profile_path'] == null
                                     ? Image.network(
-                                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4AaBuDwww3Humvzgp6koRDGO_drIw6NjTMg&usqp=CAU')
+                                        'http://www.gravatar.com/avatar/?d=mp&&s=190',
+                                        fit: BoxFit.fill,
+                                      )
                                     : Image.network(
                                         'https://image.tmdb.org/t/p/original' +
                                             type[val][index]['profile_path'],
@@ -380,7 +382,7 @@ class CastInfo1 extends StatelessWidget {
                               ),
                             ),
                             SizedBox(
-                              height: 5,
+                              height: 8,
                             ),
                             val == 'cast'
                                 ? Text(

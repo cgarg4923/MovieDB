@@ -1,17 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:MovieApp/drawer.dart';
 import 'package:MovieApp/favourites.dart';
 import 'package:MovieApp/login_page.dart';
-import 'package:MovieApp/signup_page.dart';
 import 'package:MovieApp/watchlater.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'signup_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:custom_splash/custom_splash.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -46,7 +42,7 @@ Future<void> main() async {
       logoSize: 200,
       home: MyApp(),
       customFunction: duringSplash,
-      duration: 1800,
+      duration: 2000,
       type: CustomSplashType.StaticDuration,
       outputAndHome: op,
     ),
@@ -104,8 +100,28 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int selectedIndex = 0;
+  String first, last;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  void getData() async {
+    var data = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(widget.uid)
+        .get();
+    setState(() {
+      first = data['fname'];
+      last = data['lname'];
+    });
+  }
+
+  Widget Divide(BuildContext context) {
+    return Divider(
+      color: Colors.white54,
+      height: MediaQuery.of(context).size.height * 0.05,
+      indent: MediaQuery.of(context).size.width * 0.2,
+      endIndent: MediaQuery.of(context).size.width * 0.2,
+    );
+  }
 
   void apiCall() async {
     http.Response response =
@@ -174,6 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement initState
 
     apiCall();
+    getData();
     super.initState();
   }
 
@@ -248,7 +265,7 @@ class _MyHomePageState extends State<MyHomePage> {
             .copyWith(canvasColor: Colors.black.withOpacity(0.5)),
         child: Drawer(
           elevation: 5,
-          child: null,
+          child: DrawerList(fname: first, lname: last),
         ),
       ),
       drawerScrimColor: Colors.black.withOpacity(0.3),
@@ -297,6 +314,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   heading: 'Latest...',
                   type: latest,
                   uid: widget.uid,
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 Container(
                   padding: const EdgeInsets.all(8.0),
@@ -435,9 +455,16 @@ class MovieMap extends StatelessWidget {
                       },
                       child: Card(
                         elevation: 10,
-                        child: Image.network(
-                          'https://image.tmdb.org/t/p/original' +
-                              type[index]['poster_path'],
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.white70, width: 1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: Image.network(
+                            'https://image.tmdb.org/t/p/original' +
+                                type[index]['poster_path'],
+                          ),
                         ),
                       ),
                     ),
